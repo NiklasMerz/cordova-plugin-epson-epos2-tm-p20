@@ -3,6 +3,8 @@
 #import <Cordova/CDVAvailability.h>
 
 static NSDictionary *printerTypeMap;
+static NSDictionary *langMap;
+static NSDictionary *textLangMap;
 
 @interface epos2Plugin()<Epos2DiscoveryDelegate, Epos2PtrReceiveDelegate>
 @end
@@ -16,8 +18,8 @@ static NSDictionary *printerTypeMap;
     printerStatus = nil;
     printerConnected = NO;
     printerSeries = EPOS2_TM_P20;
-    lang = EPOS2_MODEL_TAIWAN;
-    textLang = EPOS2_LANG_ZH_TW;
+    lang = EPOS2_MODEL_ANK;
+    textLang = EPOS2_LANG_EN;
 
     printerTypeMap = @{
         @"TM-M10":    [NSNumber numberWithInt:EPOS2_TM_M10],
@@ -41,6 +43,38 @@ static NSDictionary *printerTypeMap;
         @"TM-L90":    [NSNumber numberWithInt:EPOS2_TM_L90],
         @"TM-H6000":  [NSNumber numberWithInt:EPOS2_TM_H6000]
     };
+    
+    langMap = @{
+        @"EPOS2_MODEL_ANK":    [NSNumber numberWithInt:EPOS2_MODEL_ANK],
+        @"EPOS2_MODEL_CHINESE":    [NSNumber numberWithInt:EPOS2_MODEL_CHINESE],
+        @"EPOS2_MODEL_TAIWAN":    [NSNumber numberWithInt:EPOS2_MODEL_TAIWAN],
+        @"EPOS2_MODEL_KOREAN":    [NSNumber numberWithInt:EPOS2_MODEL_KOREAN],
+        @"EPOS2_MODEL_THAI":  [NSNumber numberWithInt:EPOS2_MODEL_THAI],
+        @"EPOS2_MODEL_SOUTHASIA":  [NSNumber numberWithInt:EPOS2_MODEL_SOUTHASIA]
+    };
+    
+    textLangMap = @{
+        @"EPOS2_LANG_EN":    [NSNumber numberWithInt:EPOS2_LANG_EN],
+        @"EPOS2_LANG_JA":    [NSNumber numberWithInt:EPOS2_LANG_JA],
+        @"EPOS2_LANG_MULTI":    [NSNumber numberWithInt:EPOS2_LANG_MULTI],
+        @"EPOS2_PARAM_DEFAULT":    [NSNumber numberWithInt:EPOS2_PARAM_DEFAULT],
+        @"EPOS2_PARAM_UNUSE":  [NSNumber numberWithInt:EPOS2_PARAM_UNUSE]
+    };
+}
+
+-(void)setLang:(CDVInvokedUrlCommand *)command
+{
+    if ([command.arguments count] > 1) {
+        NSString *arg = [command.arguments objectAtIndex:1];
+        NSNumber *match = [textLangMap objectForKey:arg];
+        textLang = [match intValue];
+    }
+    if ([command.arguments count] > 0) {
+        NSString *arg = [command.arguments objectAtIndex:1];
+        NSNumber *match = [langMap objectForKey:arg];
+        lang = [match intValue];
+    }
+
 }
 
 - (void)startDiscover:(CDVInvokedUrlCommand *)command
